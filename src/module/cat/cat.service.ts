@@ -8,14 +8,16 @@ import { Model } from 'mongoose';
 import { Cat } from './schema/cat.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
+import { CatsRepository } from './cat.repository';
 
 @Injectable()
 export class CatService {
-  constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
+  // constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
+  constructor(private readonly catsRepository: CatsRepository) {}
 
   async signUp(body: CatRequestDto) {
     const { email, name, password } = body;
-    const isCatExist = await this.catModel.exists({ email });
+    const isCatExist = await this.catsRepository.existByEmail(email);
 
     if (isCatExist) {
       // throw new HttpException('해당하는 고양이가 이미 존재합니다.', 403);
