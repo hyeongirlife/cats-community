@@ -24,6 +24,6 @@ export class AppModule implements NestModule {
   private readonly isDev: boolean = process.env.MODE === 'dev' ? true : false;
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
-    mongoose.set('debug', this.isDev);
+    mongoose.set('debug', this.isDev); // !! DB에 접근할 때 마다 로그를 기록. 불필요한 쿼리가 존재하는 확인하자
   }
 }
