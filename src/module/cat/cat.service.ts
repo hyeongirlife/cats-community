@@ -1,23 +1,16 @@
-import {
-  HttpException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CatRequestDto } from './dto/cat.request.dto';
-import { Model } from 'mongoose';
-import { Cat } from './schema/cat.schema';
-import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { CatsRepository } from './cat.repository';
+import { CatRepository } from './cat.repository';
 
 @Injectable()
 export class CatService {
   // constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
-  constructor(private readonly catsRepository: CatsRepository) {}
+  constructor(private readonly catRepository: CatRepository) {}
 
   async signUp(body: CatRequestDto) {
     const { email, name, password } = body;
-    const isCatExist = await this.catsRepository.existByEmail(email);
+    const isCatExist = await this.catRepository.existByEmail(email);
 
     if (isCatExist) {
       // throw new HttpException('해당하는 고양이가 이미 존재합니다.', 403);
@@ -26,7 +19,11 @@ export class CatService {
 
     const hash = await bcrypt.hash(password, 10);
 
-    const cat = await this.catModel.create({ email, name, password: hash });
+    const cat = await this.catRepository.create({
+      email,
+      name,
+      password: hash,
+    });
 
     return cat.readOnlyData;
   }
