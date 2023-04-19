@@ -9,6 +9,15 @@ import { CatRequestDto } from './dto/cat.request.dto';
 export class CatRepository {
   constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
 
+  async findByIdAndUpdateImg(id: string, fileName: string) {
+    const cat = await this.catModel.findById(id);
+    cat.imgUrl = `${process.env.API_HOST}/media/${fileName}`;
+
+    const result = await cat.save();
+    console.log('result', result);
+    return result.readOnlyData;
+  }
+
   async findCatByIdWithoutPassword(catId: string): Promise<Cat | null> {
     const cat = await this.catModel.findById(catId).select('-password');
 
