@@ -17,6 +17,7 @@ import { ReadOnlyCatDto } from './dto/cat.dto';
 import { AuthService } from '../auth/auth.service';
 import { LoginRequestDto } from '../auth/dto/login.request.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
+import { CurrentUser } from 'src/common/decorators/user.decorator';
 
 @UseInterceptors(LoggingInterceptor)
 @UseFilters(HttpExceptionFilter)
@@ -31,9 +32,8 @@ export class CatController {
   @ApiOperation({ summary: '현재 고양이 가져오기' })
   @UseGuards(JwtAuthGuard)
   @Get()
-  getCurrentCat(@Req() req) {
-    console.log(req);
-    return 'current cat';
+  getCurrentCat(@CurrentUser() cat) {
+    return cat.readOnlyData; // !! Virtual 데이터를 보여주는 방법
   }
 
   @ApiResponse({

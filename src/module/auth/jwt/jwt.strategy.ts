@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Payload } from './jwt.payload';
@@ -19,6 +19,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       payload.sub,
     );
     if (cat) {
+      return cat; // request.user
+    } else {
+      throw new UnauthorizedException('접근 오류');
     }
   }
 }

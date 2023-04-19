@@ -10,7 +10,7 @@ export class CatRepository {
   constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
 
   async findCatByIdWithoutPassword(catId: string): Promise<Cat | null> {
-    const cat = await this.catModel.findOne({ catId }).select('-password');
+    const cat = await this.catModel.findById(catId).select('-password');
 
     if (!cat) {
       throw new UnauthorizedException('접근 오류');
