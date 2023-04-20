@@ -1,13 +1,18 @@
 import { HttpException, UnauthorizedException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Cat } from './schema/cat.schema';
 import { CatRequestDto } from './dto/cat.request.dto';
+import * as mongoose from 'mongoose';
+import { CommentSchema, Comments } from '../comments/shema/comment.schema';
 
 @Injectable()
 export class CatRepository {
-  constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
+  constructor(
+    @InjectModel(Cat.name) private readonly catModel: Model<Cat>,
+    @InjectModel(Comments.name) private readonly commentModel: Model<Comment>,
+  ) {}
 
   async findByIdAndUpdateImg(id: string, fileName: string) {
     const cat = await this.catModel.findById(id);
@@ -18,7 +23,9 @@ export class CatRepository {
     return result.readOnlyData;
   }
 
-  async findCatByIdWithoutPassword(catId: string): Promise<Cat | null> {
+  async findCatByIdWithoutPassword(
+    catId: string | Types.ObjectId,
+  ): Promise<Cat | null> {
     const cat = await this.catModel.findById(catId).select('-password');
 
     if (!cat) {
@@ -30,6 +37,19 @@ export class CatRepository {
   async findCatByEmail(email: string): Promise<Cat | null> {
     try {
       const result = await this.catModel.findOne({ email });
+      return result;
+    } catch (error) {
+      throw new HttpException(error, 500);
+    }
+  }
+
+  async findAll() {
+    try {
+      const CommentsModel = mongoose.model('comments', CommentSchema);
+      const result = await this.catModel
+        .find()
+        .populate({ path: 'comments', model: this.commentModel });
+
       return result;
     } catch (error) {
       throw new HttpException(error, 500);

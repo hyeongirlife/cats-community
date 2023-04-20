@@ -8,6 +8,8 @@ import { LoggerMiddleware } from './provider/logger/logger.middleware';
 import { CatModule } from './module/cat/cat.module';
 import { CatController } from './module/cat/cat.controller';
 import { AuthModule } from './module/auth/auth.module';
+import { CommentsModule } from './module/comments/comments.module';
+import { CommentsController } from './module/comments/comments.controller';
 
 @Module({
   imports: [
@@ -18,8 +20,9 @@ import { AuthModule } from './module/auth/auth.module';
     }),
     CatModule,
     AuthModule,
+    CommentsModule,
   ],
-  controllers: [AppController, CatController],
+  controllers: [AppController, CatController, CommentsController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {

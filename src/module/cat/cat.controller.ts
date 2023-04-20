@@ -20,7 +20,7 @@ import { LoginRequestDto } from '../auth/dto/login.request.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CatCurrentDto } from './dto/catr.current.dto';
+import { CatCurrentDto } from './dto/cat.current.dto';
 import { multerOptions } from 'src/common/utils/multer.options';
 import { Cat } from './schema/cat.schema';
 
@@ -80,5 +80,11 @@ export class CatController {
     console.log(files);
     // return { image: `http://localhost:8000/media/cats/${files.filename}` };
     return this.catService.uploadImg(cat, files);
+  }
+
+  @ApiOperation({ summary: '모든 고양이 가져오기' })
+  @Get('all')
+  getAllCat() {
+    return this.catService.getAllCat();
   }
 }

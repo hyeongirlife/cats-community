@@ -39,4 +39,10 @@ export class CatService {
     console.log(`new File: ${newCat}`);
     return newCat;
   }
+
+  async getAllCat() {
+    const cats = await this.catRepository.findAll();
+    const result = cats.map((cat) => cat.readOnlyData);
+    return result;
+  }
 }
