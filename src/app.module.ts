@@ -10,6 +10,7 @@ import { CatController } from './module/cat/cat.controller';
 import { AuthModule } from './module/auth/auth.module';
 import { CommentsModule } from './module/comments/comments.module';
 import { CommentsController } from './module/comments/comments.controller';
+import { AwsService } from './aws.service';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { CommentsController } from './module/comments/comments.controller';
     CommentsModule,
   ],
   controllers: [AppController, CatController, CommentsController],
-  providers: [AppService],
+  providers: [AppService, AwsService],
 })
 export class AppModule implements NestModule {
   private readonly isDev: boolean = process.env.MODE === 'dev' ? true : false;
